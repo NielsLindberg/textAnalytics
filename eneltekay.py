@@ -21,12 +21,19 @@ poo = [porter().stem(t) for t in tokens2]
 lan = [lancaster.stem(t) for t in tokens2]
 yoo = [wnl.lemmatize(t) for t in tokens2]
 
-with open('yoyo.csv', mode="wt") as csvfile:
-    spamwriter = csv.writer(csvfile, delimiter='\t',
-        quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    spamwriter.writeheader('1', '2', '3')
-    for p in poo:
-        spamwriter.writerow(p)
+print(len(poo))
+print(len(lan))
+print(len(yoo))
+
+with open('yoyo.csv', mode="w", newline='') as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    headerz = ['1', '2', '3']
+    spamwriter.writerow(headerz)
+    x = 1
+    while x < len(poo):
+        rowz = [poo[x], lan[x], yoo[x]]
+        spamwriter.writerow(rowz)
+        x += 1
 
 nltk.help.upenn_tagset('IN')
 nltk.help.upenn_tagset('NNP')
