@@ -16,7 +16,6 @@ tagged = nltk.pos_tag(tokens)
 tokens2 = tokenoise(raw)
 tokens2
 
-
 poo = [porter().stem(t) for t in tokens2]
 lan = [lancaster.stem(t) for t in tokens2]
 yoo = [wnl.lemmatize(t) for t in tokens2]
@@ -26,7 +25,8 @@ print(len(lan))
 print(len(yoo))
 
 with open('yoyo.csv', mode="w", newline='') as csvfile:
-    spamwriter = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    spamwriter = csv.writer(csvfile, delimiter=';', quotechar='|',
+                            quoting=csv.QUOTE_MINIMAL)
     headerz = ['1', '2', '3']
     spamwriter.writerow(headerz)
     x = 1
