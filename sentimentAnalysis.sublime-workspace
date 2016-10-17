@@ -55,6 +55,14 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "sentimentor.py",
+			"settings":
+			{
+				"buffer_size": 3319,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -121,8 +129,13 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/D/Workspace/CBS/BigSocialData/textAnalytics"
+	],
 	"file_history":
 	[
+		"/D/Workspace/CBS/BigSocialData/textAnalytics/sentimentor.py",
 		"/D/Workspace/Udacity/pythonMovieWebsite/inheritance.py",
 		"/D/Workspace/Udacity/pythonMovieWebsite/entertainment_center.py",
 		"/D/Workspace/Udacity/pythonMovieWebsite/fresh_tomatoes.py",
@@ -249,8 +262,7 @@
 		"/D/Workspace/adhoc/lele.js",
 		"/D/Workspace/Udacity/P3/backup/index.html",
 		"/D/Workspace/Udacity/responsivedesign/Start/main.css",
-		"/D/Workspace/Udacity/responsivedesign/Start/responsive.css",
-		"/D/Workspace/Udacity/responsivedesign/Start/index.html"
+		"/D/Workspace/Udacity/responsivedesign/Start/responsive.css"
 	],
 	"find":
 	{
@@ -353,8 +365,39 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "sentimentor.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3319,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								475,
+								475
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
