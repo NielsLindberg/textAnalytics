@@ -36,7 +36,7 @@ class RepeatReplacer(object):
 
 
 class SpellingReplacer(object):
-    def __init__(self, dict_name='en', max_dist=2):
+    def __init__(self, dict_name='en', max_dist=4):
         self.spell_dict = enchant.Dict(dict_name)
         self.max_dist = max_dist
 
@@ -53,4 +53,14 @@ class SpellingReplacer(object):
 replacer = RepeatReplacer()
 replacer2 = SpellingReplacer()
 print(replacer.replace('goooose'))
-print(replacer2.replace('goooose'))
+print(replacer2.replace('lunguag'))
+
+class WordReplacer(object):
+    def __init__(self, word_map):
+        self.word_map = word_map
+
+    def replace(self, word):
+        return self.word_map.get(word, word)
+
+replacer3 = WordReplacer({'bday': 'birthday'})
+print(replacer3.replace('bday'))
