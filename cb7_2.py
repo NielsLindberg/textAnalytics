@@ -48,16 +48,27 @@ def split_label_feats(lfeats, split=0.75):
     test_feats = []
     for label, feats in lfeats.items():
         cutoff = int(len(feats) * split)
-        print(feats)
         train_feats.extend([(feat, label) for feat in feats[:cutoff]])
         test_feats.extend([(feat, label) for feat in feats[cutoff:]])
     return train_feats, test_feats
 
 
-lfeats = label_feats_from_corpus(movie_reviews, bag_of_words)
+lfeats = label_feats_from_corpus(movie_reviews, bag_of_bigrams_words)
 
 train_feats, test_feats = split_label_feats(lfeats, split=0.75)
 
+print(len(train_feats))
+print(len(test_feats))
+
 nb_classifier = NaiveBayesClassifier.train(train_feats)
+
+
 print(accuracy(nb_classifier, test_feats))
 nb_classifier.show_most_informative_features()
+
+probs = nb_classifier.prob_classify(test_feats[0][0])
+print(test_feats[100][0])
+print(probs.samples())
+print(probs.max())
+print(probs.prob('pos'))
+print(probs.prob('neg'))

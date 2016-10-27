@@ -96,13 +96,21 @@
 			}
 		},
 		{
-			"contents": "import collections\nfrom nltk.corpus import stopwords\nfrom nltk.corpus import movie_reviews\nfrom nltk.classify import NaiveBayesClassifier\nfrom nltk.classify.util import accuracy\n\n\ndef bag_of_words(words):\n    return dict([(word, True) for word in words])\n\n\ndef bag_of_words_not_in_set(words, badwords):\n    return bag_of_words(set(words) - set(badwords))\n\n\ndef bag_of_non_stopwords(words, stopfile='english'):\n    badwords = stopwords.words(stopfile)\n    return bag_of_words_not_in_set(words, badwords)\n\n\ndef label_feats_from_corpus(corp, feature_detector=bag_of_non_stopwords):\n    label_feats = collections.defaultdict(list)\n    # For Every Category in the Corpus\n    for label in corp.categories():\n\n        # For every file in all of the files with the category label\n        for fileid in corp.fileids(categories=[label]):\n\n            # add feutures from files to bagofwords\n            feats = feature_detector(corp.words(fileids=[fileid]))\n\n            # Add features to label_feats\n            label_feats[label].append(feats)\n    return label_feats\n\n\n# function that splits a list dicts at a cutoff percentage.\ndef split_label_feats(lfeats, split=0.75):\n    train_feats = []\n    test_feats = []\n    for label, feats in lfeats.items():\n        cutoff = int(len(feats) * split)\n\n        train_feats.extend([(feat, label) for feat in feats[:cutoff]])\n        test_feats.extend([(feat, label) for feat in feats[cutoff:]])\n    return train_feats, test_feats\n\n\nlfeats = label_feats_from_corpus(movie_reviews)\nprint(lfeats.keys())\n\ntrain_feats, test_feats = split_label_feats(lfeats, split=0.75)\nprint(len(train_feats))\nprint(len(test_feats))\n\nnb_classifier = NaiveBayesClassifier.train(train_feats)\nprint(nb_classifier.labels())\n\nnegfeat = bag_of_non_stopwords(['the', 'plot', 'was', 'ludicrous'])\nposfeat = bag_of_non_stopwords(['spaceman', 'stupid', 'clever',\n                                'matt', 'damon'])\n\nprint(negfeat)\nprint(posfeat)\n\nprint(nb_classifier.classify(negfeat))\nprint(nb_classifier.classify(posfeat))\nprint(accuracy(nb_classifier, test_feats))\n",
+			"contents": "import collections\nfrom nltk.corpus import stopwords\nfrom nltk.corpus import movie_reviews\nfrom nltk.classify import NaiveBayesClassifier\nfrom nltk.classify.util import accuracy\nfrom nltk.collocations import BigramCollocationFinder\nfrom nltk.metrics import BigramAssocMeasures\n\ndef bag_of_words(words):\n    return dict([(word, True) for word in words])\n\n\ndef bag_of_words_not_in_set(words, badwords):\n    return bag_of_words(set(words) - set(badwords))\n\n\ndef bag_of_non_stopwords(words, stopfile='english'):\n    badwords = stopwords.words(stopfile)\n    return bag_of_words_not_in_set(words, badwords)\n\n\ndef bag_of_bigrams_words(words, score_fn=BigramAssocMeasures.chi_sq, n=200):\n    bigram_finder = BigramCollocationFinder.from_words(words)\n    bigrams = bigram_finder.nbest(score_fn, n)\n    words_list = [word for word in words]\n    return bag_of_non_stopwords(words_list + bigrams)\n\n\ndef label_feats_from_corpus(corp, feature_detector=bag_of_bigrams_words):\n    label_feats = collections.defaultdict(list)\n    # For Every Category in the Corpus\n    for label in corp.categories():\n\n        # For every file in all of the files with the category label\n        for fileid in corp.fileids(categories=[label]):\n\n            # add feutures from files to bagofwords\n            feats = feature_detector(corp.words(fileids=[fileid]))\n\n            # Add features to label_feats\n            label_feats[label].append(feats)\n    return label_feats\n\n\n# function that splits a list dicts at a cutoff percentage.\ndef split_label_feats(lfeats, split=0.75):\n    train_feats = []\n    test_feats = []\n    for label, feats in lfeats.items():\n        cutoff = int(len(feats) * split)\n        train_feats.extend([(feat, label) for feat in feats[:cutoff]])\n        test_feats.extend([(feat, label) for feat in feats[cutoff:]])\n    return train_feats, test_feats\n\n\nlfeats = label_feats_from_corpus(movie_reviews, bag_of_words)\n\ntrain_feats, test_feats = split_label_feats(lfeats, split=0.75)\n\nnb_classifier = NaiveBayesClassifier.train(train_feats)\n\nprint(accuracy(nb_classifier, test_feats))\nnb_classifier.show_most_informative_features()\n\nprobs = nb_classifier.prob_classify(test_feats[0][0])\nprint(test_feats[100][0])\nprint(probs.samples())\nprint(probs.max())\nprint(probs.prob('pos'))\nprint(probs.prob('neg'))",
 			"file": "cb7_2.py",
-			"file_size": 2137,
-			"file_write_time": 131215251951286795,
+			"file_size": 2423,
+			"file_write_time": 131217887784617634,
 			"settings":
 			{
-				"buffer_size": 2069,
+				"buffer_size": 2293,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "cb7_3.py",
+			"settings":
+			{
+				"buffer_size": 37,
 				"line_ending": "Windows"
 			}
 		},
@@ -428,7 +436,7 @@
 	"groups":
 	[
 		{
-			"selected": 7,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -457,7 +465,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -486,7 +494,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -515,7 +523,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -544,7 +552,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -573,7 +581,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -582,15 +590,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2069,
+						"buffer_size": 2293,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1464,
-								1464
+								1463,
+								1463
 							]
 						],
 						"settings":
@@ -599,14 +607,42 @@
 							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 378.0,
+						"translation.y": 449.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 6,
+					"file": "cb7_3.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 37,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								37,
+								37
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
 					"file": "/D/nltk_data/corpora/custom/custom.txt",
 					"semi_transient": false,
 					"settings":
@@ -631,11 +667,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "sentimentor.py",
 					"semi_transient": false,
 					"settings":
@@ -647,8 +683,8 @@
 						"selection":
 						[
 							[
-								3321,
-								3321
+								1897,
+								1897
 							]
 						],
 						"settings":
@@ -659,10 +695,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 972.0,
+						"translation.y": 216.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
