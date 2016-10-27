@@ -1,7 +1,8 @@
-import collections, itertools
-import nltk.classify.util, nltk.metrics
+import collections
+import nltk.classify.util
+import nltk.metrics
 from nltk.classify import NaiveBayesClassifier
-from nltk.corpus import movie_reviews, stopwords
+from nltk.corpus import movie_reviews
 from nltk.collocations import BigramCollocationFinder
 from nltk.metrics import BigramAssocMeasures
 from nltk import precision, recall
@@ -29,23 +30,7 @@ def evaluate_classifier(featx):
     for i, (feats, label) in enumerate(testfeats):
             refsets[label].add(i)
             observed = classifier.classify(feats)
-            print(observed)
             testsets[observed].add(i)
-
-    reffo = collections.defaultdict(set)
-    tetto = collections.defaultdict(set)
-    print(tetto)
-    reffo['pos'].add(1)
-    tetto['pos'].add(1)
-    reffo['neg'].add(3)
-    tetto['neg'].add(3)
-    reffo['pos'].add(2)
-    tetto['neg'].add(2)
-    print(reffo)
-    print(tetto)
-    print(precision(reffo['pos'], tetto['pos']))
-    print(recall(reffo['pos'], tetto['pos']))
-
 
     print('accuracy:', nltk.classify.util.accuracy(classifier, testfeats))
     print('pos precision:', precision(refsets['pos'], testsets['pos']))
