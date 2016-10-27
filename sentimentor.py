@@ -56,10 +56,6 @@ for word in movie_reviews.words(categories=['neg']):
     word_fd[word.lower()] += 1
     label_word_fd['neg'][word.lower()] += 1
 
-# n_ii = label_word_fd[label][word]
-# n_ix = word_fd[word]
-# n_xi = label_word_fd[label].N()
-# n_xx = label_word_fd.N()
 
 pos_word_count = label_word_fd['pos'].N()
 neg_word_count = label_word_fd['neg'].N()
@@ -91,5 +87,5 @@ def best_bigram_word_feats(words, score_fn=BigramAssocMeasures.chi_sq, n=200):
     return d
 
 print('evaluating best words + bigram chi_sq word features')
-evaluate_classifier(best_bigram_word_feats)
+evaluate_classifier(tokinator.bag_of_words)
 

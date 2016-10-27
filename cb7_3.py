@@ -5,17 +5,14 @@ from nltk import precision, recall
 from nltk.corpus import movie_reviews
 import tokinator
 
-def evaluate(corp, feature_detector=tokinator.bag_of_bigrams_words):
+def evaluate(corp, feature_detector=tokinator.bag_of_best_bigram_words):
 
     negids = corp.fileids('neg')
     posids = corp.fileids('pos')
-    if feature_detector == tokinator.bag_of_best_words:
-        topwords = tokinator.best_words(corp, 10000)
-        negfeats = [(feature_detector(topwords, corp.words(fileids=[f])), 'neg') for f in negids]
-        posfeats = [(feature_detector(topwords, corp.words(fileids=[f])), 'pos') for f in posids]
-    else:
-        negfeats = [(feature_detector(corp.words(fileids=[f])), 'neg') for f in negids]
-        posfeats = [(feature_detector(corp.words(fileids=[f])), 'pos') for f in posids]
+    topwords = tokinator.best_words(corp, 10000)
+
+    negfeats = [(feature_detector(topwords, corp.words(fileids=[f])), 'neg') for f in negids]
+    posfeats = [(feature_detector(topwords, corp.words(fileids=[f])), 'pos') for f in posids]
 
     negcutoff = int(len(negfeats)*3/4)
     poscutoff = int(len(posfeats)*3/4)
@@ -37,6 +34,11 @@ def evaluate(corp, feature_detector=tokinator.bag_of_bigrams_words):
     print('pos recall:', recall(refsets['pos'], testsets['pos']))
     print('neg precision:', precision(refsets['neg'], testsets['neg']))
     print('neg recall:', recall(refsets['neg'], testsets['neg']))
-    classifier.show_most_informative_features()
+    classifier.show_most_informative_features(20)
 
-evaluate(movie_reviews, tokinator.bag_of_best_words)
+methods = list([tokinator.bag_of_words, tokinator.bag_of_non_stopwords,
+            tokinator.bag_of_bigrams_words, tokinator.bag_of_best_bigram_words,
+            tokinator.bag_of_best_words])
+
+for method in methods:
+    evaluate(movie_reviews, method)
